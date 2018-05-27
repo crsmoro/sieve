@@ -15,7 +15,7 @@ import com.shuffle.sieve.core.parser.bean.TrackerCategory;
 public class SpeedShare implements Tracker {
 
 	private final String name = "Speed-Share";
-	
+
 	public final static String BASE_URL = "https://www.speed-share.org/";
 
 	private final String url = BASE_URL + "buscar_tor.php?order=desc&sort=id";
@@ -33,7 +33,7 @@ public class SpeedShare implements Tracker {
 	private final String captchaField = null;
 
 	private final String authenticationMethod = "POST";
-	
+
 	private final String searchMethod = "POST";
 
 	private final String pageField = "page";
@@ -69,7 +69,7 @@ public class SpeedShare implements Tracker {
 		categories.add(new TrackerCategory("Adulto : Qualidade inferior", "", "68"));
 		categories.add(new TrackerCategory("Adulto : Revistas", "", "101"));
 		categories.add(new TrackerCategory("Adulto : Jogos", "", "207"));
-		
+
 		categories.add(new TrackerCategory("Animês : HD 4K", "", "240"));
 		categories.add(new TrackerCategory("Animês : HD", "", "189"));
 		categories.add(new TrackerCategory("Animês : DVD", "", "102"));
@@ -82,6 +82,10 @@ public class SpeedShare implements Tracker {
 		categories.add(new TrackerCategory("Animês : Qualidade inferior", "", "191"));
 
 	}
+
+	private final TorrentParser torrentParser = new SpeedShareTorrent();
+
+	private final TorrentDetailedParser torrentDetailedParser = new SpeedShareTorrentDetail();
 
 	@Override
 	public String getName() {
@@ -181,12 +185,12 @@ public class SpeedShare implements Tracker {
 
 	@Override
 	public TorrentParser getTorrentParser() {
-		return new SpeedShareTorrent();
+		return torrentParser;
 	}
 
 	@Override
 	public TorrentDetailedParser getTorrentDetailedParser() {
-		return new SpeedShareTorrentDetail();
+		return torrentDetailedParser;
 	}
 
 }

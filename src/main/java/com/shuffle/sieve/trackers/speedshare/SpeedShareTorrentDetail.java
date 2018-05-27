@@ -13,11 +13,9 @@ public class SpeedShareTorrentDetail implements TorrentDetailedParser {
 
 	@Override
 	public String getImdbLink(String htmlContent) {
-		Document document = Jsoup.parse(htmlContent);
 		String imdbLink = "";
-		String docBody = document.select("fieldset.search").get(2).html();
-		Pattern pattern = Pattern.compile("(http:\\/\\/www.imdb.com\\/title\\/tt(\\d+))", Pattern.CASE_INSENSITIVE);
-		Matcher matcher = pattern.matcher(docBody);
+		Pattern pattern = Pattern.compile("(http(|s):\\/\\/www.imdb.com(|\\.br)\\/title\\/tt(\\d+))", Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher(htmlContent);
 		if (matcher.find() && matcher.groupCount() > 0) {
 			imdbLink = matcher.group(0);
 		}
@@ -37,11 +35,6 @@ public class SpeedShareTorrentDetail implements TorrentDetailedParser {
 			youtubeLink = "https://www.youtube.com/watch?v=" + youtubeLink;
 		}
 		return youtubeLink;
-	}
-
-	@Override
-	public long getAno(String htmlContent) {
-		return 0;
 	}
 
 	@Override

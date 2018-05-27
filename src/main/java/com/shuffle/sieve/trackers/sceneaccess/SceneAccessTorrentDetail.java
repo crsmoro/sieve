@@ -24,11 +24,6 @@ public class SceneAccessTorrentDetail implements TorrentDetailedParser {
 	}
 
 	@Override
-	public long getAno(String htmlContent) {
-		return 0l;
-	}
-
-	@Override
 	public String getContent(String htmlContent) {
 		return Jsoup.parse(htmlContent).select("#details_table > tbody > tr:nth-child(3) > td.td_col").html();
 	}

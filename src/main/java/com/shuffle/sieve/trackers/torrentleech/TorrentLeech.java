@@ -16,7 +16,7 @@ public class TorrentLeech implements Tracker {
 
 	private final String name = "TorrentLeech";
 
-	private final String url = "https://www.torrentleech.org/torrents/browse/index/";
+	private final String url = "https://www.torrentleech.org/torrents/browse/list/";
 
 	private final String authenticationUrl = "https://www.torrentleech.org/user/account/login/";
 
@@ -78,6 +78,18 @@ public class TorrentLeech implements Tracker {
 		categories.add(new TrackerCategory("Applications: Mac", "", "24"));
 		categories.add(new TrackerCategory("Applications: PDA", "", "25"));
 		categories.add(new TrackerCategory("Applications: 0-day", "", "33"));
+		
+		categories.add(new TrackerCategory("???", "", "37"));
+		categories.add(new TrackerCategory("Education: Education", "", "38"));
+		categories.add(new TrackerCategory("Games: PS4", "", "39"));
+		categories.add(new TrackerCategory("???", "", "40"));
+		categories.add(new TrackerCategory("Movies: 4K Upscaled", "", "41"));
+		categories.add(new TrackerCategory("Games: Mac", "", "42"));
+		categories.add(new TrackerCategory("Movies: HDRip", "", "43"));
+		categories.add(new TrackerCategory("???", "", "44"));
+		categories.add(new TrackerCategory("Books: EBooks", "", "45"));
+		categories.add(new TrackerCategory("Books: Comics", "", "46"));
+		categories.add(new TrackerCategory("Movies: Real 4K", "", "47"));
 	}
 
 	@Override
@@ -102,7 +114,7 @@ public class TorrentLeech implements Tracker {
 
 	@Override
 	public boolean isAuthenticated(String htmlContent) {
-		return Jsoup.parse(htmlContent).select("#loginform").size() <= 0;
+		return Jsoup.parse(htmlContent).select("a[href=\"/user/account/lostpassword\"]").size() <= 0;
 	}
 
 	@Override

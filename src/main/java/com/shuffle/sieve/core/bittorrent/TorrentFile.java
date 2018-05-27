@@ -88,6 +88,7 @@ public class TorrentFile {
 		try {
 			this.inputStream = inputStream;
 			createHash();
+			this.inputStream.reset();
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}

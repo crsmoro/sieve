@@ -29,11 +29,6 @@ public class DemonoidTorrentDetail implements TorrentDetailedParser {
 	}
 
 	@Override
-	public long getAno(String content) {
-		return 0;
-	}
-
-	@Override
 	public String getContent(String content) {
 		return Jsoup.parse(content).select("#fslispc > table > tbody > tr > td > table:nth-child(3)").outerHtml();
 	}

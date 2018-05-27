@@ -16,8 +16,6 @@ public class Torrent implements Cloneable {
 
 	private String name;
 
-	private long year;
-
 	private double size;
 
 	private Date added;
@@ -84,14 +82,6 @@ public class Torrent implements Cloneable {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public long getYear() {
-		return year;
-	}
-
-	public void setYear(long year) {
-		this.year = year;
 	}
 
 	public double getSize() {
@@ -168,7 +158,7 @@ public class Torrent implements Cloneable {
 
 	@Override
 	public String toString() {
-		return "Torrent [id=" + id + ", username=" + username + ", password=[Protected], name=" + name + ", year=" + year + ", size=" + size + ", added=" + added + ", category=" + category + ", link=" + link + ", downloadLink="
+		return "Torrent [id=" + id + ", username=" + username + ", password=[Protected], name=" + name + ", size=" + size + ", added=" + added + ", category=" + category + ", link=" + link + ", downloadLink="
 				+ downloadLink + ", imdbLink=" + imdbLink + ", youtubeLink=" + youtubeLink + ", content=" + content + ", detailed=" + detailed + "]";
 	}
 

@@ -3,7 +3,13 @@ package com.shuffle.sieve.core.parser;
 import java.util.Date;
 import java.util.List;
 
+import com.shuffle.sieve.core.service.TrackerManager;
+
 public interface TorrentParser {
+	
+	default void setTrackerManager(TrackerManager trackerManager) {
+		
+	}
 
 	List<String> getRows(String htmlContent);
 

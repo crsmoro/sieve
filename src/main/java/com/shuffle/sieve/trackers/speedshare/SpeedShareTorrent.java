@@ -64,7 +64,7 @@ public class SpeedShareTorrent implements TorrentParser {
 
 	@Override
 	public String getCategory(String row) {
-		return Jsoup.parse(row).select("tr:nth-child(2) > td:nth-child(2) > strong > a[href]").first().parent().previousElementSibling().text();
+		return Jsoup.parse(row).select("tr:nth-child(2) > td:nth-child(2) > strong > a[href]").first().parent().parent().select("strong").eq(1).text();
 	}
 
 }

@@ -217,6 +217,10 @@ public class ManicomioShare implements Tracker {
 
 	}
 
+	private final TorrentParser torrentParser = new ManicomioShareTorrent();
+
+	private final TorrentDetailedParser torrentDetailedParser = new ManicomioShareTorrentDetail();
+
 	@Override
 	public String getName() {
 		return name;
@@ -239,7 +243,8 @@ public class ManicomioShare implements Tracker {
 
 	@Override
 	public boolean isAuthenticated(String htmlContent) {
-		return Jsoup.parse(htmlContent).select("a[href=\"https://www.manicomio-share.com/account-recover.php\"]").size() <= 0;
+		return Jsoup.parse(htmlContent).select("a[href=\"https://www.manicomio-share.com/account-recover.php\"]")
+				.size() <= 0;
 	}
 
 	@Override
@@ -301,12 +306,12 @@ public class ManicomioShare implements Tracker {
 
 	@Override
 	public TorrentParser getTorrentParser() {
-		return new ManicomioShareTorrent();
+		return torrentParser;
 	}
 
 	@Override
 	public TorrentDetailedParser getTorrentDetailedParser() {
-		return new ManicomioShareTorrentDetail();
+		return torrentDetailedParser;
 	}
 
 }

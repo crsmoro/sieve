@@ -1,34 +1,26 @@
-package com.shuffle.sieve.trackers.manicomioshare;
+package com.shuffle.sieve.trackers.torrentbytes;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import com.shuffle.sieve.core.parser.TorrentDetailedParser;
 
-public class ManicomioShareTorrentDetail implements TorrentDetailedParser {
+public class TorrentBytesTorrentDetail implements TorrentDetailedParser {
 
 	@Override
 	public String getImdbLink(String htmlContent) {
-		Document document = Jsoup.parse(htmlContent);
+
+		String docBody = Jsoup.parse(htmlContent).select("#content table > tbody > tr:nth-child(4) > td:nth-child(2)")
+				.html();
+
 		String imdbLink = "";
-		String docBody = document.select("#contentHolder1 fieldset.search").html();
 		Pattern pattern = Pattern.compile("(http(|s):\\/\\/www.imdb.com\\/title\\/tt(\\d+))", Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(docBody);
 		if (matcher.find() && matcher.groupCount() > 0) {
 			imdbLink = matcher.group(0);
-		}
-
-		if (StringUtils.isBlank(imdbLink)) {
-			docBody = document.select("#infoimdb div.modal-body").html();
-			pattern = Pattern.compile("(http(|s):\\/\\/www.imdb.com\\/title\\/tt(\\d+))", Pattern.CASE_INSENSITIVE);
-			matcher = pattern.matcher(docBody);
-			if (matcher.find() && matcher.groupCount() > 0) {
-				imdbLink = matcher.group(0);
-			}
 		}
 
 		return imdbLink;
@@ -51,8 +43,7 @@ public class ManicomioShareTorrentDetail implements TorrentDetailedParser {
 
 	@Override
 	public String getContent(String htmlContent) {
-		Document document = Jsoup.parse(htmlContent);
-		return document.select("#contentHolder1 fieldset.search").html();
+		return Jsoup.parse(htmlContent).select("#content table > tbody > tr:nth-child(4) > td:nth-child(2)").html();
 	}
 
 }

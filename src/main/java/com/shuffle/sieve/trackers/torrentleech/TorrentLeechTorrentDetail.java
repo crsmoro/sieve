@@ -24,11 +24,6 @@ public class TorrentLeechTorrentDetail implements TorrentDetailedParser {
 	}
 
 	@Override
-	public long getAno(String htmlContent) {
-		return 0l;
-	}
-
-	@Override
 	public String getContent(String htmlContent) {
 		return Jsoup.parse(htmlContent).select(".torrent_info_details").html();
 	}
