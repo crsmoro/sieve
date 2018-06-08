@@ -18,7 +18,7 @@ public class TorrentBytesTorrent implements TorrentParser {
 	@Override
 	public List<String> getRows(String content) {
 		List<String> rows = new ArrayList<>();
-		Jsoup.parse(content).select("#content table:eq(3) > tbody > tr").stream().skip(1).forEach(element -> {
+		Jsoup.parse(content).select("#content table:nth-of-type(2) > tbody > tr").stream().skip(1).forEach(element -> {
 			rows.add(element.outerHtml());
 		});
 		return rows;
