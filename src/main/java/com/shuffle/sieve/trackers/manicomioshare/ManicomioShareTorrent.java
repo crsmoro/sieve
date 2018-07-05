@@ -8,12 +8,15 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.shuffle.sieve.core.exception.SieveException;
 import com.shuffle.sieve.core.parser.TorrentParser;
 import com.shuffle.sieve.core.service.TrackerManager;
 
@@ -67,8 +70,7 @@ public class ManicomioShareTorrent implements TorrentParser {
 
 	@Override
 	public double getSize(String row) {
-		return parseSize(Jsoup.parse(getFullContentToParse(row)).select("tr > td:nth-child(4) > span").first().text()
-				.replaceAll(",", ""));
+		return parseSize(Optional.ofNullable(Jsoup.parse(getFullContentToParse(row)).select("tr > td:nth-child(4)")).map(Elements::first).map(Element::text).orElse("0.0").replaceAll(",", ""));
 	}
 
 	@Override
@@ -97,6 +99,6 @@ public class ManicomioShareTorrent implements TorrentParser {
 
 	@Override
 	public String getCategory(String row) {
-		return Jsoup.parse(getFullContentToParse(row)).select("tr > td:nth-child(1) > a > img").first().attr("title");
+		return Optional.ofNullable(Jsoup.parse(getFullContentToParse(row)).select("tr > td:nth-child(1) > a > img")).map(Elements::first).orElseThrow(() -> new SieveException("Error parsing category")).attr("title");
 	}
 }
