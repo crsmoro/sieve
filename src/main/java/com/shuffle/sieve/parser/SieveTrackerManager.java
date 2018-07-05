@@ -11,8 +11,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -124,10 +128,39 @@ public class SieveTrackerManager implements TrackerManager {
 		return page;
 	}
 
+	private class ThreadPoolBuildResults extends ThreadPoolExecutor {
+		public ThreadPoolBuildResults() {
+			super(10, 10, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+		}
+
+		@Override
+		protected void afterExecute(Runnable r, Throwable t) {
+			super.afterExecute(r, t);
+			if (t == null && r instanceof Future<?>) {
+				try {
+					Future<?> future = (Future<?>) r;
+					if (future.isDone()) {
+						future.get();
+					}
+				} catch (CancellationException ce) {
+					t = ce;
+				} catch (ExecutionException ee) {
+					t = ee.getCause();
+				} catch (InterruptedException ie) {
+					Thread.currentThread().interrupt(); // ignore/reset
+				}
+			}
+			if (t != null) {
+				log.error("Problem parsing torrent", t);
+			}
+		}
+
+	}
+
 	private List<Torrent> buildResults(String body) {
 		log.debug("QueryParameters : " + getQueryParameters());
 
-		ExecutorService executorService = Executors.newFixedThreadPool(10);
+		ExecutorService executorService = new ThreadPoolBuildResults();
 		List<Torrent> torrents = new ArrayList<Torrent>();
 		getTracker().getTorrentParser().setTrackerManager(this);
 		for (String row : getTracker().getTorrentParser().getRows(body)) {
@@ -254,7 +287,7 @@ public class SieveTrackerManager implements TrackerManager {
 
 					} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException
 							| SecurityException e) {
-						e.printStackTrace();
+						log.error("Problem parsing [" + torrent + "]", e);
 					}
 				}
 				add = totalFilters == totalPass;
@@ -269,7 +302,7 @@ public class SieveTrackerManager implements TrackerManager {
 		try {
 			executorService.awaitTermination(10, TimeUnit.MINUTES);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			log.error("Search thread interrupted", e);
 		}
 
 		return torrents.stream().sorted((o1, o2) -> Long.compare(o2.getId(), o1.getId())).collect(Collectors.toList());
@@ -289,8 +322,9 @@ public class SieveTrackerManager implements TrackerManager {
 						urlCategory.append(getTracker().getCategoryField());
 					}
 					if (StringUtils.isNotBlank(trackerCategory.getCode())) {
-						urlCategory.append( (StringUtils.isNotBlank(getTracker().getCategoryField()) ? urlPatterns.get(getTracker().getParameterType()).get("assigner") : "")
-								+ trackerCategory.getCode());
+						urlCategory.append((StringUtils.isNotBlank(getTracker().getCategoryField())
+								? urlPatterns.get(getTracker().getParameterType()).get("assigner")
+								: "") + trackerCategory.getCode());
 					}
 				} else if (getTracker().getParameterType().equals(ParameterType.PATH)) {
 					if (urlCategory.length() > 0) {
@@ -310,7 +344,8 @@ public class SieveTrackerManager implements TrackerManager {
 		url.append(getTracker().getUrl() + (getTracker().getUrl()
 				.contains(urlPatterns.get(getTracker().getParameterType()).get("initial-separator"))
 						? (getTracker().getParameterType().equals(ParameterType.DEFAULT)
-								? urlPatterns.get(getTracker().getParameterType()).get("separator") : "")
+								? urlPatterns.get(getTracker().getParameterType()).get("separator")
+								: "")
 						: urlPatterns.get(getTracker().getParameterType()).get("initial-separator")));
 
 		if (getTracker().getParameterType().equals(ParameterType.PATH)
