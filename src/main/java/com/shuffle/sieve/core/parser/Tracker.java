@@ -14,6 +14,7 @@ import com.shuffle.sieve.trackers.manicomioshare.ManicomioShare;
 import com.shuffle.sieve.trackers.sceneaccess.SceneAccess;
 import com.shuffle.sieve.trackers.speedshare.SpeedShare;
 import com.shuffle.sieve.trackers.torrentleech.TorrentLeech;
+import com.shuffle.sieve.trackers.amigosshareclub.AmigosShare;
 
 /**
  * Default interface to implement a new tracker parser
@@ -22,6 +23,7 @@ import com.shuffle.sieve.trackers.torrentleech.TorrentLeech;
  * @see SceneAccess
  * @see TorrentLeech
  * @see SpeedShare
+ * @see AmigosShare
  * @author crsmoro
  *
  */
